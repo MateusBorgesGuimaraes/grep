@@ -3,14 +3,88 @@
 
 @theme {
   --font-mono: 'Courier Prime', monospace;
+
+  /* backgrounds */
+  --color-bg-base: var(--bg-base);
+  --color-bg-surface: var(--bg-surface);
+  --color-bg-elevated: var(--bg-elevated);
+
+  /* borders */
+  --color-border-subtle: var(--border-subtle);
+  --color-border-soft: var(--border-soft);
+
+  /* text */
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+
+  /* mac dots */
+  --color-mac-red: var(--red);
+  --color-mac-yellow: var(--yellow);
+  --color-mac-green: var(--green);
 }
 
+/* ── mac os dots ── */
 :root {
   --red: #ff5f56;
   --yellow: #ffbd2e;
   --green: #27c93f;
 }
 
+/* ── light theme (default) ── */
+:root {
+  --bg-base: #f5f5f4;
+  --bg-surface: #e7e5e4;
+  --bg-elevated: #ffffff;
+  --border-subtle: #d6d3d1;
+  --border-soft: #a8a29e;
+  --text-primary: #1c1917;
+  --text-secondary: #57534e;
+  --text-muted: #a8a29e;
+  --scrollbar: #d6d3d1;
+}
+
+/* ── dark theme ── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-base: #1c1917;
+    --bg-surface: #292524;
+    --bg-elevated: #3c3733;
+    --border-subtle: #44403c;
+    --border-soft: #57534e;
+    --text-primary: #f5f5f4;
+    --text-secondary: #a8a29e;
+    --text-muted: #57534e;
+    --scrollbar: #44403c;
+  }
+}
+
+/* ── manual override classes ── */
+.theme-light {
+  --bg-base: #f5f5f4;
+  --bg-surface: #e7e5e4;
+  --bg-elevated: #ffffff;
+  --border-subtle: #d6d3d1;
+  --border-soft: #a8a29e;
+  --text-primary: #1c1917;
+  --text-secondary: #57534e;
+  --text-muted: #a8a29e;
+  --scrollbar: #d6d3d1;
+}
+
+.theme-dark {
+  --bg-base: #1c1917;
+  --bg-surface: #292524;
+  --bg-elevated: #3c3733;
+  --border-subtle: #44403c;
+  --border-soft: #57534e;
+  --text-primary: #f5f5f4;
+  --text-secondary: #a8a29e;
+  --text-muted: #57534e;
+  --scrollbar: #44403c;
+}
+
+/* ── base ── */
 * {
   box-sizing: border-box;
 }
@@ -24,15 +98,19 @@ body,
 body {
   margin: 0;
   font-family: var(--font-mono);
-  background: var(--color-stone-100);
-  color: var(--color-stone-900);
+  background: var(--bg-base);
+  color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
 }
 
+/* ── links ── */
 a {
-  color: var(--color-stone-700);
+  color: var(--text-secondary);
   text-decoration: none;
-  border-bottom: 1px solid var(--color-stone-400);
+  border-bottom: 1px solid var(--border-soft);
   transition: opacity 0.2s ease;
 }
 
@@ -40,34 +118,31 @@ a:hover {
   opacity: 0.7;
 }
 
+/* ── scrollbar ── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--scrollbar);
+  border-radius: 2px;
+}
+
+/* ── layout ── */
 .container {
   width: min(1100px, calc(100% - 2rem));
   margin-inline: auto;
 }
 
-.mac-dots {
-  display: flex;
-  gap: 6px;
-}
-
-.mac-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-}
-
-.mac-dot.red {
-  background: var(--red);
-}
-
-.mac-dot.yellow {
-  background: var(--yellow);
-}
-
-.mac-dot.green {
-  background: var(--green);
-}
-
+/* ── animations ── */
 .fade-in {
   animation: fade-in 0.4s ease-in-out;
 }
