@@ -54,9 +54,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <TanStackQueryProvider>
-          <Navbar />
-          <div className="flex-1 flex items-center content-center flex-col gap-2.5">
-            {children}
+          <div className="flex h-screen overflow-hidden">
+            <Navbar />
+            <main className="flex-1 overflow-y-auto bg-bg-base">
+              {children}
+            </main>
           </div>
           <TanStackDevtools
             config={{
