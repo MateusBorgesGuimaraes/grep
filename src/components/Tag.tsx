@@ -12,7 +12,7 @@ export const Tag = ({ type, children }: CustomTagProps) => {
 
   return (
     <span
-      className={`rounded-xs flex items-center justify-center text-xs transition-all duration-150 cursor-pointer py-0.5 px-1 gap-1 ${tagStyles[type]}`}
+      className={`rounded-xs flex items-center justify-center text-xs transition-all duration-150 py-0.5 px-1 gap-1 ${tagStyles[type]}`}
     >
       {children}
     </span>

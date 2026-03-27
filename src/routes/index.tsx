@@ -2,13 +2,16 @@ import { BoxCard } from '#/components/BoxCard'
 import { CustomButton } from '#/components/form/CustomButton'
 import { TwoButtons } from '#/components/form/TwoButtons'
 import { HeaderBox } from '#/components/HeaderBox'
+import { ListCard } from '#/components/ListCard'
 import { TitleSection } from '#/components/TitleSection'
 import { createFileRoute } from '@tanstack/react-router'
 import { Check, Menu, Plus, Refresh, Sort, ViewGrid } from 'iconoir-react'
+import { useState } from 'react'
 
 export const Route = createFileRoute('/')({ component: App })
 
 function App() {
+  const [listGrid, setListGrig] = useState(false)
   return (
     <main>
       <HeaderBox>
@@ -71,16 +74,30 @@ function App() {
               <Check width={16} height={16} />
               mark all read
             </CustomButton>
-            <TwoButtons firstButton={<ViewGrid />} secondButton={<Menu />} />
+            <TwoButtons
+              typeList={listGrid}
+              firstButton={<ViewGrid />}
+              secondButton={<Menu />}
+              onFirstClick={() => setListGrig(false)}
+              onSecondClick={() => setListGrig(true)}
+            />
           </div>
         </div>
       </HeaderBox>
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(min(500px,100%),1fr))] gap-5 p-5">
-        <BoxCard />
-        <BoxCard />
-        <BoxCard />
-        <BoxCard />
-      </div>
+      {listGrid ? (
+        <div className="flex flex-col p-5 gap-5">
+          <ListCard />
+          <ListCard />
+          <ListCard />
+        </div>
+      ) : (
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(min(500px,100%),1fr))] gap-5 p-5">
+          <BoxCard />
+          <BoxCard />
+          <BoxCard />
+          <BoxCard />
+        </div>
+      )}
     </main>
   )
 }
