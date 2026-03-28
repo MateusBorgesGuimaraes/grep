@@ -14,6 +14,7 @@ import appCss from '../styles.css?url'
 
 import type { QueryClient } from '@tanstack/react-query'
 import { Navbar } from '#/components/Navbar'
+import { NotFound } from '#/components/pages/not-found'
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -42,6 +43,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       },
     ],
   }),
+  notFoundComponent: NotFound,
   shellComponent: RootDocument,
 })
 

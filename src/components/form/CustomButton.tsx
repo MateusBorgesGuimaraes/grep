@@ -2,9 +2,15 @@ type CustomButtonProps = {
   type: 'primary' | 'secondary' | 'ghost'
   size: 'sm' | 'md'
   children: React.ReactNode
+  onClickAction?: () => void
 }
 
-export const CustomButton = ({ type, size, children }: CustomButtonProps) => {
+export const CustomButton = ({
+  type,
+  size,
+  children,
+  onClickAction,
+}: CustomButtonProps) => {
   const buttonStyles = {
     primary: 'bg-text-primary text-bg-base hover:opacity-70',
     secondary:
@@ -20,6 +26,7 @@ export const CustomButton = ({ type, size, children }: CustomButtonProps) => {
 
   return (
     <button
+      onClick={onClickAction}
       className={`rounded-sm flex items-center justify-center text-xs transition-all duration-150 cursor-pointer ${buttonStyles[type]} ${buttonSizes[size]}`}
     >
       {children}

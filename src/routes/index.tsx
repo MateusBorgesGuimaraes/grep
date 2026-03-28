@@ -4,14 +4,44 @@ import { TwoButtons } from '#/components/form/TwoButtons'
 import { HeaderBox } from '#/components/HeaderBox'
 import { ListCard } from '#/components/ListCard'
 import { TitleSection } from '#/components/TitleSection'
+import { useArticles } from '#/hooks/useArticles'
+import { useCategories } from '#/hooks/useCategories'
 import { createFileRoute } from '@tanstack/react-router'
 import { Check, Menu, Plus, Refresh, Sort, ViewGrid } from 'iconoir-react'
 import { useState } from 'react'
+import { z } from 'zod'
 
-export const Route = createFileRoute('/')({ component: App })
+const articlesSearchSchema = z.object({
+  page: z.string().optional(),
+  search: z.string().optional(),
+  feedId: z.string().optional(),
+  categoryId: z.string().optional(),
+  limit: z.string().optional(),
+  unreadOnly: z.string().optional(),
+  order: z.enum(['ASC', 'DESC']).optional().default('DESC'),
+})
+
+export const Route = createFileRoute('/')({
+  validateSearch: articlesSearchSchema,
+  component: App,
+})
 
 function App() {
   const [listGrid, setListGrig] = useState(false)
+  const { data, setFilter, categoryId, order } = useArticles()
+  const { data: categories } = useCategories()
+
+  const { items, page, total, totalPages } = data?.data ?? {
+    items: [],
+    page: 1,
+    total: 0,
+    totalPages: 0,
+  }
+
+  if (!categories) {
+    return <div>Loading...</div>
+  }
+
   return (
     <main>
       <HeaderBox>
@@ -54,19 +84,30 @@ function App() {
               //
             </p>
             <div className="flex gap-1.5">
-              <CustomButton type="secondary" size="md">
-                tecnologia
-              </CustomButton>
-              <CustomButton type="secondary" size="md">
-                ciencias
-              </CustomButton>
-              <CustomButton type="secondary" size="md">
-                noticias
-              </CustomButton>
+              {categories.data.map((c) => (
+                <CustomButton
+                  onClickAction={() =>
+                    setFilter({ categoryId: c.id.toString() })
+                  }
+                  key={c.id}
+                  type={
+                    categoryId === c.id.toString() ? 'primary' : 'secondary'
+                  }
+                  size="md"
+                >
+                  {c.name}
+                </CustomButton>
+              ))}
             </div>
           </div>
           <div className="flex gap-2.5">
-            <CustomButton type="ghost" size="md">
+            <CustomButton
+              onClickAction={() =>
+                setFilter({ order: order === 'ASC' ? 'DESC' : 'ASC' })
+              }
+              type="ghost"
+              size="md"
+            >
               <Sort width={16} height={16} />
               sort
             </CustomButton>
@@ -86,16 +127,31 @@ function App() {
       </HeaderBox>
       {listGrid ? (
         <div className="flex flex-col p-5 gap-5">
-          <ListCard />
-          <ListCard />
-          <ListCard />
+          {items.map((i) => (
+            <ListCard
+              key={i.guid}
+              read={i.read}
+              font={i.feed.name}
+              category={i.feed.category.name}
+              description={i.description}
+              createdAt={i.createdAt}
+              title={i.title}
+            />
+          ))}
         </div>
       ) : (
         <div className="grid grid-cols-[repeat(auto-fill,minmax(min(500px,100%),1fr))] gap-5 p-5">
-          <BoxCard />
-          <BoxCard />
-          <BoxCard />
-          <BoxCard />
+          {items.map((i) => (
+            <BoxCard
+              key={i.guid}
+              read={i.read}
+              font={i.feed.name}
+              category={i.feed.category.name}
+              description={i.description}
+              createdAt={i.createdAt}
+              title={i.title}
+            />
+          ))}
         </div>
       )}
     </main>

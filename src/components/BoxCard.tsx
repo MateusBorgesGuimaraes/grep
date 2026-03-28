@@ -2,31 +2,49 @@ import { Bookmark, OpenNewWindow } from 'iconoir-react'
 import { MiniButton } from './form/MiniButton'
 import { MacDots } from './MacDots'
 import { Tag } from './Tag'
+import { sliceText } from '#/utils/split-text'
+import { timeAgo } from '#/utils/time-ago'
 
-export const BoxCard = () => {
+type BoxCardProps = {
+  read: boolean
+  font: string
+  category: string
+  title: string
+  createdAt: string
+  description: string
+}
+
+export const BoxCard = ({
+  read,
+  font,
+  category,
+  title,
+  createdAt,
+  description,
+}: BoxCardProps) => {
   return (
-    <div className="border-[0.5px] border-border-subtle rounded-sm">
+    <div className="border-[0.5px] border-border-subtle rounded-sm flex flex-col h-full">
       <div className="h-45 bg-border-subtle flex items-center justify-center">
         cover image
       </div>
-      <div className="p-2.5 flex flex-col gap-2.5">
+
+      <div className="p-2.5 flex flex-col gap-2.5 flex-1">
         <MacDots />
+
         <div className="flex gap-1.5">
-          <Tag type="primary">• unread</Tag>
-          <Tag type="ghost">techcrunch</Tag>
-          <Tag type="ghost">tecnologia</Tag>
+          <Tag type="primary">• {read ? 'read' : 'unread'}</Tag>
+          <Tag type="ghost">{font}</Tag>
+          <Tag type="ghost">{category}</Tag>
         </div>
-        <h3 className="text-base text-text-primary">
-          The future of RSS in a world dominated by algorithmic feeds and walled
-          gardens
-        </h3>
+
+        <h3 className="text-base text-text-primary">{title}</h3>
+
         <p className="text-sm text-text-secondary">
-          Open standards are making a quiet comeback. Developers and power users
-          are returning to RSS as a way to take back control of their
-          information...
+          {sliceText(145, description)}
         </p>
-        <div className="border-t-[0.5px] border-border-subtle pt-2.5 flex justify-between items-center">
-          <p className="text-xs text-text-muted">2h ago 4 min read</p>
+
+        <div className="mt-auto border-t-[0.5px] border-border-subtle pt-2.5 flex justify-between items-center">
+          <p className="text-xs text-text-muted">{timeAgo(createdAt)}</p>
           <div className="flex gap-3">
             <MiniButton>
               <Bookmark width={16} height={16} />
