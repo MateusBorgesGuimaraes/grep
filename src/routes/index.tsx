@@ -3,6 +3,7 @@ import { CustomButton } from '#/components/form/CustomButton'
 import { TwoButtons } from '#/components/form/TwoButtons'
 import { HeaderBox } from '#/components/HeaderBox'
 import { ListCard } from '#/components/ListCard'
+import { Pagination } from '#/components/Pagination'
 import { TitleSection } from '#/components/TitleSection'
 import { useArticles } from '#/hooks/useArticles'
 import { useCategories } from '#/hooks/useCategories'
@@ -28,7 +29,7 @@ export const Route = createFileRoute('/')({
 
 function App() {
   const [listGrid, setListGrig] = useState(false)
-  const { data, setFilter, categoryId, order } = useArticles()
+  const { data, setFilter, categoryId, order, goToPage } = useArticles()
   const { data: categories } = useCategories()
 
   const { items, page, total, totalPages } = data?.data ?? {
@@ -84,6 +85,13 @@ function App() {
               //
             </p>
             <div className="flex gap-1.5">
+              <CustomButton
+                onClickAction={() => setFilter({ categoryId: '' })}
+                type={categoryId === '' ? 'primary' : 'secondary'}
+                size="md"
+              >
+                all
+              </CustomButton>
               {categories.data.map((c) => (
                 <CustomButton
                   onClickAction={() =>
@@ -154,6 +162,14 @@ function App() {
           ))}
         </div>
       )}
+      <div className="ml-5 pb-5">
+        <Pagination
+          onPageChange={goToPage}
+          page={page}
+          total={total}
+          totalPages={totalPages}
+        />
+      </div>
     </main>
   )
 }

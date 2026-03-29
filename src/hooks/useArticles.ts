@@ -9,7 +9,7 @@ export function useArticles() {
   const [showFilter, setShowFilters] = useState(false)
 
   const page = Number(searchParams.page) || 1
-  const limit = Number(searchParams.limit) || 10
+  const limit = Number(searchParams.limit) || 6
   const search = searchParams.search || ''
   const order = searchParams.order || 'DESC'
   const feedId = searchParams.feedId || ''
