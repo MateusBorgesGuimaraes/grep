@@ -6,21 +6,27 @@ import { sliceText } from '#/utils/split-text'
 import { timeAgo } from '#/utils/time-ago'
 
 type BoxCardProps = {
+  id: number
   read: boolean
   font: string
   category: string
   title: string
   createdAt: string
   description: string
+  saved: boolean
+  saveAction: (id: number) => void
 }
 
 export const BoxCard = ({
+  id,
   read,
   font,
   category,
   title,
   createdAt,
   description,
+  saved,
+  saveAction,
 }: BoxCardProps) => {
   return (
     <div className="border-[0.5px] border-border-subtle rounded-sm flex flex-col h-full">
@@ -46,7 +52,7 @@ export const BoxCard = ({
         <div className="mt-auto border-t-[0.5px] border-border-subtle pt-2.5 flex justify-between items-center">
           <p className="text-xs text-text-muted">{timeAgo(createdAt)}</p>
           <div className="flex gap-3">
-            <MiniButton>
+            <MiniButton active={saved} onClick={() => saveAction(id)}>
               <Bookmark width={16} height={16} />
             </MiniButton>
             <MiniButton>

@@ -54,3 +54,9 @@ export type Category = {
   color: string
   createdAt: string
 }
+
+export type SavedArticle = {
+  id: number
+  savedAt: string
+  article: Item
+}

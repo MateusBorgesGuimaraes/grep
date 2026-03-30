@@ -6,21 +6,27 @@ import { sliceText } from '#/utils/split-text'
 import { timeAgo } from '#/utils/time-ago'
 
 type ListCardProps = {
+  id: number
   read: boolean
   font: string
   category: string
   title: string
   createdAt: string
   description: string
+  saved: boolean
+  saveAction: (id: number) => void
 }
 
 export const ListCard = ({
+  id,
   read,
   font,
   category,
   title,
   createdAt,
   description,
+  saved,
+  saveAction,
 }: ListCardProps) => {
   return (
     <div className="flex border-[0.5px] border-border-subtle rounded-sm">
@@ -48,7 +54,7 @@ export const ListCard = ({
           <span className="text-xs text-text-muted">{timeAgo(createdAt)}</span>
 
           <div className="flex gap-3">
-            <MiniButton>
+            <MiniButton active={saved} onClick={() => saveAction(id)}>
               <Bookmark width={16} height={16} />
             </MiniButton>
             <MiniButton>

@@ -1,10 +1,24 @@
-type MiniButtonProps = {
-  children: React.ReactNode
+import { type ButtonHTMLAttributes } from 'react'
+
+type MiniButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+  active?: boolean
 }
 
-export const MiniButton = ({ children }: MiniButtonProps) => {
+export const MiniButton = ({
+  children,
+  active,
+  className = '',
+  ...props
+}: MiniButtonProps) => {
+  const styleActive = active
+    ? 'bg-text-primary text-bg-base hover:opacity-70 border-none'
+    : 'border-[0.5px] border-border-soft hover:bg-border-subtle'
+
   return (
-    <button className="border-[0.5px] border-border-soft rounded-sm p-1 hover:bg-border-subtle transition cursor-pointer">
+    <button
+      className={`rounded-sm p-1 transition cursor-pointer ${styleActive} ${className}`}
+      {...props}
+    >
       {children}
     </button>
   )

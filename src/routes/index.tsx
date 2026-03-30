@@ -5,11 +5,16 @@ import { HeaderBox } from '#/components/HeaderBox'
 import { ListCard } from '#/components/ListCard'
 import { Pagination } from '#/components/Pagination'
 import { TitleSection } from '#/components/TitleSection'
+import {
+  useRemoveArticle,
+  useSaveArticle,
+  useSavedArticle,
+} from '#/hooks/useArticleMutations'
 import { useArticles } from '#/hooks/useArticles'
 import { useCategories } from '#/hooks/useCategories'
 import { createFileRoute } from '@tanstack/react-router'
 import { Check, Menu, Plus, Refresh, Sort, ViewGrid } from 'iconoir-react'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { z } from 'zod'
 
 const articlesSearchSchema = z.object({
@@ -31,7 +36,9 @@ function App() {
   const [listGrid, setListGrig] = useState(false)
   const { data, setFilter, categoryId, order, goToPage } = useArticles()
   const { data: categories } = useCategories()
-
+  const { data: savedArticles } = useSavedArticle()
+  const { mutate: saveArticle } = useSaveArticle()
+  const { mutate: removeArticle } = useRemoveArticle()
   const { items, page, total, totalPages } = data?.data ?? {
     items: [],
     page: 1,
@@ -39,8 +46,25 @@ function App() {
     totalPages: 0,
   }
 
+  const savedIds = useMemo(
+    () => new Set(savedArticles?.data?.map((a) => a.article.id) ?? []),
+    [savedArticles],
+  )
+
   if (!categories) {
     return <div>Loading...</div>
+  }
+
+  const articleIsSave = (id: number) => {
+    return savedIds.has(id)
+  }
+
+  const toggleSave = (id: number) => {
+    if (articleIsSave(id)) {
+      removeArticle(id)
+    } else {
+      saveArticle(id)
+    }
   }
 
   return (
@@ -138,12 +162,15 @@ function App() {
           {items.map((i) => (
             <ListCard
               key={i.guid}
+              id={i.id}
+              saveAction={toggleSave}
               read={i.read}
               font={i.feed.name}
               category={i.feed.category.name}
               description={i.description}
               createdAt={i.createdAt}
               title={i.title}
+              saved={articleIsSave(i.id)}
             />
           ))}
         </div>
@@ -151,6 +178,8 @@ function App() {
         <div className="grid grid-cols-[repeat(auto-fill,minmax(min(500px,100%),1fr))] gap-5 p-5">
           {items.map((i) => (
             <BoxCard
+              id={i.id}
+              saveAction={toggleSave}
               key={i.guid}
               read={i.read}
               font={i.feed.name}
@@ -158,6 +187,7 @@ function App() {
               description={i.description}
               createdAt={i.createdAt}
               title={i.title}
+              saved={articleIsSave(i.id)}
             />
           ))}
         </div>

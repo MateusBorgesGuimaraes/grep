@@ -1,5 +1,11 @@
 import { api } from './api'
-import type { ApiResponse, DataResponse, FetchItemParams, Item } from './types'
+import type {
+  ApiResponse,
+  DataResponse,
+  FetchItemParams,
+  Item,
+  SavedArticle,
+} from './types'
 
 export async function fetchArticles(
   params: FetchItemParams,
@@ -16,5 +22,22 @@ export async function fetchArticles(
     queryParams.append('unreadOnly', params.unreadOnly.toString())
 
   const { data } = await api.get(`articles?${queryParams.toString()}`)
+  return data
+}
+
+export async function saveArticle(articleId: number) {
+  const { data } = await api.post(`saved-articles/${articleId}`)
+  return data
+}
+
+export async function removeArticle(articleId: number) {
+  const { data } = await api.delete(`saved-articles/${articleId}`)
+  return data
+}
+
+export async function fetchSavedArticles(): Promise<
+  ApiResponse<SavedArticle[]>
+> {
+  const { data } = await api.get(`saved-articles`)
   return data
 }

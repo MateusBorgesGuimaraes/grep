@@ -5,6 +5,7 @@ import {
 } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
+import { Toaster } from 'sonner'
 
 import TanStackQueryProvider from '../integrations/tanstack-query/root-provider'
 
@@ -62,6 +63,20 @@ function RootDocument({ children }: { children: React.ReactNode }) {
               {children}
             </main>
           </div>
+          <Toaster
+            position="bottom-right"
+            toastOptions={{
+              style: {
+                fontFamily: 'var(--font-mono)',
+                fontSize: '11px',
+                background: 'var(--bg-elevated)',
+                color: 'var(--text-primary)',
+                border: '0.5px solid var(--border-soft)',
+                borderRadius: '4px',
+                letterSpacing: '0.03em',
+              },
+            }}
+          />
           <TanStackDevtools
             config={{
               position: 'bottom-right',
