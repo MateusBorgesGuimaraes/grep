@@ -34,7 +34,8 @@ export const Route = createFileRoute('/')({
 
 function App() {
   const [listGrid, setListGrig] = useState(false)
-  const { data, setFilter, categoryId, order, goToPage } = useArticles()
+  const { data, setFilter, categoryId, order, goToPage, refetch } =
+    useArticles()
   const { data: categories } = useCategories()
   const { data: savedArticles } = useSavedArticle()
   const { mutate: saveArticle } = useSaveArticle()
@@ -77,15 +78,15 @@ function App() {
               <Plus width={16} height={16} />
               add feed
             </CustomButton>
-            <CustomButton type="primary" size="md">
+            <CustomButton type="primary" size="md" onClickAction={refetch}>
               <Refresh width={16} height={16} />
               refresh
             </CustomButton>
           </div>
         </div>
         <p className="text-xs text-text-muted">
-          <span className="text-text-primary">42</span> unread // 4 feeds active
-          // next sync in 13min
+          <span className="text-text-primary">{total}</span> unread // 4 feeds
+          active // next sync in 13min
         </p>
       </HeaderBox>
       <HeaderBox>
@@ -162,6 +163,7 @@ function App() {
           {items.map((i) => (
             <ListCard
               key={i.guid}
+              link={i.link}
               id={i.id}
               saveAction={toggleSave}
               read={i.read}
@@ -179,6 +181,7 @@ function App() {
           {items.map((i) => (
             <BoxCard
               id={i.id}
+              link={i.link}
               saveAction={toggleSave}
               key={i.guid}
               read={i.read}

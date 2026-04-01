@@ -1,5 +1,3 @@
-import type { ButtonHTMLAttributes } from 'react'
-
 type TwoButtonsProps = {
   firstButton: React.ReactNode
   secondButton: React.ReactNode

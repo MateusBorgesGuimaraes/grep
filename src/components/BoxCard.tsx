@@ -7,6 +7,7 @@ import { timeAgo } from '#/utils/time-ago'
 
 type BoxCardProps = {
   id: number
+  link: string
   read: boolean
   font: string
   category: string
@@ -19,6 +20,7 @@ type BoxCardProps = {
 
 export const BoxCard = ({
   id,
+  link,
   read,
   font,
   category,
@@ -55,7 +57,7 @@ export const BoxCard = ({
             <MiniButton active={saved} onClick={() => saveAction(id)}>
               <Bookmark width={16} height={16} />
             </MiniButton>
-            <MiniButton>
+            <MiniButton as="link" href={link}>
               <OpenNewWindow width={16} height={16} />
             </MiniButton>
           </div>

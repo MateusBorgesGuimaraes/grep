@@ -106,18 +106,6 @@ body {
     color 0.2s ease;
 }
 
-/* ── links ── */
-a {
-  color: var(--text-secondary);
-  text-decoration: none;
-  border-bottom: 1px solid var(--border-soft);
-  transition: opacity 0.2s ease;
-}
-
-a:hover {
-  opacity: 0.7;
-}
-
 /* ── scrollbar ── */
 * {
   scrollbar-width: thin;

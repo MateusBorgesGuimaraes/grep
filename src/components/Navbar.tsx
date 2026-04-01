@@ -10,16 +10,35 @@ import {
 } from 'iconoir-react'
 import ThemeToggle from './ThemeToggle'
 import { useState } from 'react'
+import { Link } from '@tanstack/react-router'
 
 const NAV_MAIN = [
-  { icon: <HomeSimpleDoor />, label: 'home', badge: 42, badgeMuted: false },
-  { icon: <BookmarkBook />, label: 'saved', badge: 7, badgeMuted: true },
-  { icon: <Search />, label: 'search', badge: null, badgeMuted: false },
+  {
+    icon: <HomeSimpleDoor />,
+    label: 'home',
+    to: '/',
+    badge: 42,
+    badgeMuted: false,
+  },
+  {
+    icon: <BookmarkBook />,
+    label: 'saved',
+    to: '/saved',
+    badge: 7,
+    badgeMuted: true,
+  },
+  {
+    icon: <Search />,
+    label: 'search',
+    to: '/search',
+    badge: null,
+    badgeMuted: false,
+  },
 ]
 
 const NAV_SETTINGS = [
-  { icon: <Settings />, label: 'manage feeds' },
-  { icon: <Settings />, label: 'settings' },
+  { icon: <Settings />, label: 'manage feeds', to: '/feeds' },
+  { icon: <Settings />, label: 'settings', to: '/settings' },
 ]
 
 const CATEGORIES = [
@@ -30,7 +49,6 @@ const CATEGORIES = [
 ]
 
 export const Navbar = () => {
-  const [active, setActive] = useState('home')
   const [categoriesOpen, setCategoriesOpen] = useState(true)
 
   return (
@@ -54,46 +72,44 @@ export const Navbar = () => {
       {/* nav */}
       <nav className="flex-1 overflow-y-auto py-2 min-h-0">
         {/* main */}
-        <span className="block px-4 pt-3 pb-1 text-xs uppercase tracking-wides text-text-muted">
+        <span className="block px-4 pt-3 pb-1 text-xs uppercase tracking-widest text-text-muted">
           main
         </span>
 
         {NAV_MAIN.map((item) => (
-          <button
+          <Link
             key={item.label}
-            onClick={() => setActive(item.label)}
-            className={`
-              w-full flex items-center gap-3 px-4 py-2 text-left cursor-pointer transition-colors
-              border-l-2
-              ${
-                active === item.label
-                  ? 'bg-bg-elevated border-l-text-primary'
-                  : 'border-l-transparent hover:bg-bg-elevated'
-              }
-            `}
+            to={item.to}
+            activeOptions={{ exact: item.to === '/' }}
+            className="w-full flex items-center gap-3 px-4 py-2 text-left cursor-pointer transition-colors border-l-2 border-l-transparent hover:bg-bg-elevated"
+            activeProps={{ className: 'bg-bg-elevated !border-l-text-primary' }}
           >
-            <span
-              className={`shrink-0 flex items-center [&>svg]:w-5 [&>svg]:h-5 ${active === item.label ? 'text-text-primary' : 'text-text-secondary'}`}
-            >
-              {item.icon}
-            </span>
-            <span
-              className={`flex-1 text-[13px] tracking-[0.03em] ${active === item.label ? 'text-text-primary font-medium' : 'text-text-secondary'}`}
-            >
-              {item.label}
-            </span>
-            {item.badge !== null && (
-              <span
-                className={`text-xs px-1.5 py-px rounded-sm tracking-[0.04em] ${
-                  item.badgeMuted
-                    ? 'border-[0.5px] border-border-soft text-text-muted'
-                    : 'bg-text-primary text-bg-base'
-                }`}
-              >
-                {item.badge}
-              </span>
+            {({ isActive }) => (
+              <>
+                <span
+                  className={`shrink-0 flex items-center [&>svg]:w-5 [&>svg]:h-5 ${isActive ? 'text-text-primary' : 'text-text-secondary'}`}
+                >
+                  {item.icon}
+                </span>
+                <span
+                  className={`flex-1 text-[13px] tracking-[0.03em] ${isActive ? 'text-text-primary font-medium' : 'text-text-secondary'}`}
+                >
+                  {item.label}
+                </span>
+                {item.badge !== null && (
+                  <span
+                    className={`text-xs px-1.5 py-px rounded-sm tracking-[0.04em] ${
+                      item.badgeMuted
+                        ? 'border-[0.5px] border-border-soft text-text-muted'
+                        : 'bg-text-primary text-bg-base'
+                    }`}
+                  >
+                    {item.badge}
+                  </span>
+                )}
+              </>
             )}
-          </button>
+          </Link>
         ))}
 
         {/* categories */}
@@ -143,30 +159,27 @@ export const Navbar = () => {
         </span>
 
         {NAV_SETTINGS.map((item) => (
-          <button
+          <Link
             key={item.label}
-            onClick={() => setActive(item.label)}
-            className={`
-              w-full flex items-center gap-3 px-4 py-2 text-left cursor-pointer transition-colors
-              border-l-2
-              ${
-                active === item.label
-                  ? 'bg-bg-elevated border-l-text-primary'
-                  : 'border-l-transparent hover:bg-bg-elevated'
-              }
-            `}
+            to={item.to}
+            className="w-full flex items-center gap-3 px-4 py-2 text-left cursor-pointer transition-colors border-l-2 border-l-transparent hover:bg-bg-elevated"
+            activeProps={{ className: 'bg-bg-elevated !border-l-text-primary' }}
           >
-            <span
-              className={`shrink-0 flex items-center [&>svg]:w-5 [&>svg]:h-5 ${active === item.label ? 'text-text-primary' : 'text-text-secondary'}`}
-            >
-              {item.icon}
-            </span>
-            <span
-              className={`text-[13px] tracking-[0.03em] ${active === item.label ? 'text-text-primary font-medium' : 'text-text-secondary'}`}
-            >
-              {item.label}
-            </span>
-          </button>
+            {({ isActive }) => (
+              <>
+                <span
+                  className={`shrink-0 flex items-center [&>svg]:w-5 [&>svg]:h-5 ${isActive ? 'text-text-primary' : 'text-text-secondary'}`}
+                >
+                  {item.icon}
+                </span>
+                <span
+                  className={`text-[13px] tracking-[0.03em] ${isActive ? 'text-text-primary font-medium' : 'text-text-secondary'}`}
+                >
+                  {item.label}
+                </span>
+              </>
+            )}
+          </Link>
         ))}
       </nav>
 

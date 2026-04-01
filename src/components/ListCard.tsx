@@ -11,6 +11,7 @@ type ListCardProps = {
   font: string
   category: string
   title: string
+  link: string
   createdAt: string
   description: string
   saved: boolean
@@ -23,6 +24,7 @@ export const ListCard = ({
   font,
   category,
   title,
+  link,
   createdAt,
   description,
   saved,
@@ -57,7 +59,7 @@ export const ListCard = ({
             <MiniButton active={saved} onClick={() => saveAction(id)}>
               <Bookmark width={16} height={16} />
             </MiniButton>
-            <MiniButton>
+            <MiniButton as="link" href={link}>
               <OpenNewWindow width={16} height={16} />
             </MiniButton>
           </div>
