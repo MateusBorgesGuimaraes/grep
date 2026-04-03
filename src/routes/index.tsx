@@ -12,6 +12,7 @@ import {
 } from '#/hooks/useArticleMutations'
 import { useArticles } from '#/hooks/useArticles'
 import { useCategories } from '#/hooks/useCategories'
+import { useRefreshFeeds } from '#/hooks/useRefreshFeeds'
 import { createFileRoute } from '@tanstack/react-router'
 import { Check, Menu, Plus, Refresh, Sort, ViewGrid } from 'iconoir-react'
 import { useMemo, useState } from 'react'
@@ -34,9 +35,9 @@ export const Route = createFileRoute('/')({
 
 function App() {
   const [listGrid, setListGrig] = useState(false)
-  const { data, setFilter, categoryId, order, goToPage, refetch } =
-    useArticles()
+  const { data, setFilter, categoryId, order, goToPage } = useArticles()
   const { data: categories } = useCategories()
+  const { mutate: refreshFeeds } = useRefreshFeeds()
   const { data: savedArticles } = useSavedArticle()
   const { mutate: saveArticle } = useSaveArticle()
   const { mutate: removeArticle } = useRemoveArticle()
@@ -78,7 +79,7 @@ function App() {
               <Plus width={16} height={16} />
               add feed
             </CustomButton>
-            <CustomButton type="primary" size="md" onClickAction={refetch}>
+            <CustomButton type="primary" size="md" onClickAction={refreshFeeds}>
               <Refresh width={16} height={16} />
               refresh
             </CustomButton>

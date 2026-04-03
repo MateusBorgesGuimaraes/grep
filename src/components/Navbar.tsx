@@ -7,6 +7,7 @@ import {
   List,
   NavArrowRight,
   Settings,
+  Folder,
 } from 'iconoir-react'
 import ThemeToggle from './ThemeToggle'
 import { useState } from 'react'
@@ -25,6 +26,13 @@ const NAV_MAIN = [
     label: 'saved',
     to: '/saved',
     badge: 7,
+    badgeMuted: true,
+  },
+  {
+    icon: <Folder />,
+    label: 'category',
+    to: '/category',
+    badge: 4,
     badgeMuted: true,
   },
   {

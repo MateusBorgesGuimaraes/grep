@@ -53,6 +53,7 @@ export type Category = {
   icon: string
   color: string
   createdAt: string
+  feeds: Feed[]
 }
 
 export type SavedArticle = {
