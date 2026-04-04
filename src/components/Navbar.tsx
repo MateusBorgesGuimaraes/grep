@@ -1,4 +1,4 @@
-import { CustomInput } from './form/CustomInput'
+import { CustomSearchInput } from './form/CustomSearchInput'
 import { MacDots } from './MacDots'
 import {
   HomeSimpleDoor,
@@ -74,7 +74,7 @@ export const Navbar = () => {
 
       {/* search */}
       <div className="py-3 px-3 border-b-[0.5px] border-border-soft">
-        <CustomInput icon={<Search />} placeholder="search..." />
+        <CustomSearchInput icon={<Search />} placeholder="search..." />
       </div>
 
       {/* nav */}

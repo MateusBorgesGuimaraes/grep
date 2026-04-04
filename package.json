@@ -15,9 +15,9 @@
     "check": "prettier --write . && eslint --fix"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-devtools": "latest",
-    "@tanstack/react-form": "latest",
     "@tanstack/react-query": "latest",
     "@tanstack/react-query-devtools": "latest",
     "@tanstack/react-router": "latest",
@@ -26,10 +26,12 @@
     "@tanstack/react-start": "latest",
     "@tanstack/router-plugin": "^1.132.0",
     "axios": "^1.14.0",
+    "emoji-mart": "^5.6.0",
     "iconoir-react": "^7.11.0",
     "lucide-react": "^0.545.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-hook-form": "^7.72.1",
     "sonner": "^2.0.7",
     "tailwindcss": "^4.1.18",
     "zod": "^4.3.6"

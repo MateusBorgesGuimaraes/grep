@@ -1,15 +1,16 @@
-type CustomButtonProps = {
-  type: 'primary' | 'secondary' | 'ghost'
+import type { ButtonHTMLAttributes } from 'react'
+
+type CustomButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+  variant: 'primary' | 'secondary' | 'ghost'
   size: 'sm' | 'md'
-  children: React.ReactNode
-  onClickAction?: () => void
 }
 
 export const CustomButton = ({
-  type,
+  variant,
   size,
   children,
-  onClickAction,
+  className = '',
+  ...props
 }: CustomButtonProps) => {
   const buttonStyles = {
     primary: 'bg-text-primary text-bg-base hover:opacity-70',
@@ -26,8 +27,8 @@ export const CustomButton = ({
 
   return (
     <button
-      onClick={onClickAction}
-      className={`rounded-sm flex items-center justify-center text-xs transition-all duration-150 cursor-pointer ${buttonStyles[type]} ${buttonSizes[size]}`}
+      className={`rounded-sm flex items-center justify-center text-xs transition-all duration-150 cursor-pointer ${buttonStyles[variant]} ${buttonSizes[size]} ${className}`}
+      {...props}
     >
       {children}
     </button>

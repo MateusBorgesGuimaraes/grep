@@ -1,30 +1,40 @@
-import { type InputHTMLAttributes } from 'react'
+import type { InputHTMLAttributes } from 'react'
+import type { FieldError } from 'react-hook-form'
 
-interface CustomInputProps extends InputHTMLAttributes<HTMLInputElement> {
-  icon?: React.ReactNode
+type InputProps = InputHTMLAttributes<HTMLInputElement> & {
+  label?: string
+  error?: FieldError
 }
 
 export const CustomInput = ({
-  icon,
+  label,
+  error,
   className = '',
   ...props
-}: CustomInputProps) => {
+}: InputProps) => {
   return (
-    <div className="flex items-center gap-2 bg-bg-elevated border-[0.5px] border-border-soft rounded px-2.5 py-1.5 focus-within:border-border-subtle transition-colors">
-      {icon && (
-        <span className="text-text-muted shrink-0 flex items-center [&>svg]:w-4 [&>svg]:h-4">
-          {icon}
-        </span>
-      )}
+    <div className="flex flex-col gap-.5">
+      {label && <label className="text-xs text-text-primary">{label}</label>}
       <input
-        {...props}
         className={`
-          bg-transparent outline-none border-none w-full
-          text-[11px] text-text-primary placeholder:text-text-muted
-          tracking-[0.04em] font-mono
+          bg-bg-elevated
+          border-[0.5px]
+          border-border-soft
+          rounded
+          px-2.5
+          py-1.5
+          text-xs
+          outline-none
+          focus:border-text-primary
+          ${error ? 'border-red-500' : ''}
           ${className}
         `}
+        {...props}
       />
+
+      {error && (
+        <span className="text-[10px] text-red-500">{error.message}</span>
+      )}
     </div>
   )
 }

@@ -75,11 +75,15 @@ function App() {
         <div className="flex justify-between items-center">
           <TitleSection title="home" subtitle="all feeds" />
           <div className="flex gap-1.5">
-            <CustomButton type="ghost" size="md">
+            <CustomButton variant="ghost" size="md">
               <Plus width={16} height={16} />
               add feed
             </CustomButton>
-            <CustomButton type="primary" size="md" onClickAction={refreshFeeds}>
+            <CustomButton
+              variant="primary"
+              size="md"
+              onClick={() => refreshFeeds()}
+            >
               <Refresh width={16} height={16} />
               refresh
             </CustomButton>
@@ -97,13 +101,13 @@ function App() {
               FILTER
             </h4>
             <div className="flex gap-1.5">
-              <CustomButton type="primary" size="md">
+              <CustomButton variant="primary" size="md">
                 all
               </CustomButton>
-              <CustomButton type="secondary" size="md">
+              <CustomButton variant="secondary" size="md">
                 unread
               </CustomButton>
-              <CustomButton type="secondary" size="md">
+              <CustomButton variant="secondary" size="md">
                 saved
               </CustomButton>
             </div>
@@ -112,19 +116,17 @@ function App() {
             </p>
             <div className="flex gap-1.5">
               <CustomButton
-                onClickAction={() => setFilter({ categoryId: '' })}
-                type={categoryId === '' ? 'primary' : 'secondary'}
+                onClick={() => setFilter({ categoryId: '' })}
+                variant={categoryId === '' ? 'primary' : 'secondary'}
                 size="md"
               >
                 all
               </CustomButton>
               {categories.data.map((c) => (
                 <CustomButton
-                  onClickAction={() =>
-                    setFilter({ categoryId: c.id.toString() })
-                  }
+                  onClick={() => setFilter({ categoryId: c.id.toString() })}
                   key={c.id}
-                  type={
+                  variant={
                     categoryId === c.id.toString() ? 'primary' : 'secondary'
                   }
                   size="md"
@@ -136,16 +138,16 @@ function App() {
           </div>
           <div className="flex gap-2.5">
             <CustomButton
-              onClickAction={() =>
+              onClick={() =>
                 setFilter({ order: order === 'ASC' ? 'DESC' : 'ASC' })
               }
-              type="ghost"
+              variant="ghost"
               size="md"
             >
               <Sort width={16} height={16} />
               sort
             </CustomButton>
-            <CustomButton type="primary" size="md">
+            <CustomButton variant="primary" size="md">
               <Check width={16} height={16} />
               mark all read
             </CustomButton>
