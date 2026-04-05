@@ -68,17 +68,17 @@ function RouteComponent() {
             </p>
             <div className="flex gap-1.5">
               <CustomButton
-                onClickAction={() => setCategory('')}
-                type={category === '' ? 'primary' : 'secondary'}
+                onClick={() => setCategory('')}
+                variant={category === '' ? 'primary' : 'secondary'}
                 size="md"
               >
                 all
               </CustomButton>
               {categories.data.map((c) => (
                 <CustomButton
-                  onClickAction={() => setCategory(c.name)}
+                  onClick={() => setCategory(c.name)}
                   key={c.id}
-                  type={category === c.name ? 'primary' : 'secondary'}
+                  variant={category === c.name ? 'primary' : 'secondary'}
                   size="md"
                 >
                   {c.name}

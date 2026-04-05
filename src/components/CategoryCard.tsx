@@ -7,9 +7,15 @@ import { timeAgo } from '#/utils/time-ago'
 
 type CategoryCardProps = {
   category?: Category
+  onEdit?: (category: Category) => void
+  onDelete?: (id: number) => void
 }
 
-export const CategoryCard = ({ category }: CategoryCardProps) => {
+export const CategoryCard = ({
+  category,
+  onEdit,
+  onDelete,
+}: CategoryCardProps) => {
   const feeds = category?.feeds ?? []
 
   const visibleFeeds = feeds.slice(0, 5)
@@ -74,10 +80,10 @@ export const CategoryCard = ({ category }: CategoryCardProps) => {
           </div>
 
           <div className="flex gap-3">
-            <MiniButton>
+            <MiniButton onClick={() => category && onDelete?.(category.id)}>
               <Trash width={16} height={16} />
             </MiniButton>
-            <MiniButton as="link" href={''}>
+            <MiniButton onClick={() => category && onEdit?.(category)}>
               <Edit width={16} height={16} />
             </MiniButton>
           </div>

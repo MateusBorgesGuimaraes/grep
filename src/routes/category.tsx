@@ -7,8 +7,10 @@ import { TitleSection } from '#/components/TitleSection'
 import { useCategories } from '#/hooks/useCategories'
 import {
   createCategorySchema,
+  editCategorySchema,
   type CreateCategoryFormData,
-} from '#/schemas/create-category.schema'
+  type EditCategoryFormData,
+} from '#/schemas/category.schema'
 import { createFileRoute } from '@tanstack/react-router'
 import { Plus } from 'iconoir-react'
 import { useState } from 'react'
@@ -16,7 +18,12 @@ import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CustomColorPicker } from '#/components/form/CustomColorPicker'
 import { CustomIconPicker } from '#/components/form/CustomIconPicker'
-import { useCreateCategory } from '#/hooks/useCategoriesMutations'
+import {
+  useCreateCategory,
+  useDeleteCategory,
+  useEditCategory,
+} from '#/hooks/useCategoriesMutations'
+import type { Category } from '#/services/types'
 
 export const Route = createFileRoute('/category')({
   component: RouteComponent,
@@ -25,22 +32,42 @@ export const Route = createFileRoute('/category')({
 function RouteComponent() {
   const { data: categories } = useCategories()
   const { mutate: createCategory } = useCreateCategory()
+  const { mutate: editCategory } = useEditCategory()
+  const { mutate: deleteCategory } = useDeleteCategory()
   const [addModal, setAddModal] = useState(false)
+  const [editModal, setEditModal] = useState(false)
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null)
 
-  const form = useForm<CreateCategoryFormData>({
+  const createForm = useForm<CreateCategoryFormData>({
     resolver: zodResolver(createCategorySchema),
-    defaultValues: {
-      name: '',
-      icon: '',
-      color: '',
-    },
+    defaultValues: { name: '', icon: '', color: '' },
   })
 
-  const handleSubmit = (data: CreateCategoryFormData) => {
-    createCategory(data)
+  const editForm = useForm<EditCategoryFormData>({
+    resolver: zodResolver(editCategorySchema),
+  })
 
+  const handleCreate = (data: CreateCategoryFormData) => {
+    createCategory(data)
     setAddModal(false)
-    form.reset()
+    createForm.reset()
+  }
+
+  const handleOpenEdit = (category: Category) => {
+    setEditingCategory(category)
+    editForm.reset({
+      name: category.name,
+      icon: category.icon,
+      color: category.color,
+    })
+    setEditModal(true)
+  }
+
+  const handleEdit = (data: EditCategoryFormData) => {
+    if (!editingCategory) return
+    editCategory({ id: editingCategory.id, data })
+    setEditModal(false)
+    setEditingCategory(null)
   }
 
   return (
@@ -71,7 +98,12 @@ function RouteComponent() {
 
       <div className="p-5 flex flex-col gap-5">
         {categories?.data.map((c) => (
-          <CategoryCard key={c.id} category={c} />
+          <CategoryCard
+            key={c.id}
+            category={c}
+            onEdit={handleOpenEdit}
+            onDelete={deleteCategory}
+          />
         ))}
       </div>
       <Modal
@@ -79,38 +111,82 @@ function RouteComponent() {
         subtitle="// organize your categories"
         open={addModal}
         onClose={() => setAddModal(false)}
-        onSubmit={form.handleSubmit(handleSubmit)}
+        onSubmit={createForm.handleSubmit(handleCreate)}
       >
         <div className="flex flex-col gap-3">
           <CustomInput
             label="name"
             placeholder="category name"
-            {...form.register('name')}
-            error={form.formState.errors.name}
+            {...createForm.register('name')}
+            error={createForm.formState.errors.name}
           />
 
           <Controller
             name="icon"
-            control={form.control}
+            control={createForm.control}
             render={({ field }) => (
               <CustomIconPicker
                 label="icon"
                 value={field.value}
                 onChange={field.onChange}
-                error={form.formState.errors.icon}
+                error={createForm.formState.errors.icon}
               />
             )}
           />
 
           <Controller
             name="color"
-            control={form.control}
+            control={createForm.control}
             render={({ field }) => (
               <CustomColorPicker
                 label="color"
                 value={field.value}
                 onChange={field.onChange}
-                error={form.formState.errors.color}
+                error={createForm.formState.errors.color}
+              />
+            )}
+          />
+        </div>
+      </Modal>
+
+      <Modal
+        title="edit category"
+        subtitle={`// editing "${editingCategory?.name}"`}
+        open={editModal}
+        onClose={() => {
+          setEditModal(false)
+          setEditingCategory(null)
+        }}
+        onSubmit={editForm.handleSubmit(handleEdit)}
+      >
+        <div className="flex flex-col gap-3">
+          <CustomInput
+            label="name"
+            placeholder="category name"
+            {...editForm.register('name')}
+            error={editForm.formState.errors.name}
+          />
+          <Controller
+            name="icon"
+            control={editForm.control}
+            render={({ field }) => (
+              <CustomIconPicker
+                label="icon"
+                value={field.value}
+                onChange={field.onChange}
+                error={editForm.formState.errors.icon}
+              />
+            )}
+          />
+          <Controller
+            name="color"
+            control={editForm.control}
+            render={({ field }) => (
+              <CustomColorPicker
+                label="color"
+                value={field.value}
+                onChange={field.onChange}
+                error={editForm.formState.errors.color}
               />
             )}
           />
