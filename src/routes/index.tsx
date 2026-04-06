@@ -1,8 +1,11 @@
 import { BoxCard } from '#/components/BoxCard'
 import { CustomButton } from '#/components/form/CustomButton'
+import { CustomInput } from '#/components/form/CustomInput'
+import { CustomSelect } from '#/components/form/CustomSelect'
 import { TwoButtons } from '#/components/form/TwoButtons'
 import { HeaderBox } from '#/components/HeaderBox'
 import { ListCard } from '#/components/ListCard'
+import { Modal } from '#/components/Modal'
 import { Pagination } from '#/components/Pagination'
 import { TitleSection } from '#/components/TitleSection'
 import {
@@ -12,10 +15,14 @@ import {
 } from '#/hooks/useArticleMutations'
 import { useArticles } from '#/hooks/useArticles'
 import { useCategories } from '#/hooks/useCategories'
+import { useCreateFeeds } from '#/hooks/useFeedsMutations'
 import { useRefreshFeeds } from '#/hooks/useRefreshFeeds'
+import { createFeedSchema, type CreateFeedInput } from '#/schemas/feed.schema'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { createFileRoute } from '@tanstack/react-router'
 import { Check, Menu, Plus, Refresh, Sort, ViewGrid } from 'iconoir-react'
 import { useMemo, useState } from 'react'
+import { useForm, type FieldError } from 'react-hook-form'
 import { z } from 'zod'
 
 const articlesSearchSchema = z.object({
@@ -35,9 +42,11 @@ export const Route = createFileRoute('/')({
 
 function App() {
   const [listGrid, setListGrig] = useState(false)
+  const [openModal, setOpenModal] = useState(false)
   const { data, setFilter, categoryId, order, goToPage } = useArticles()
   const { data: categories } = useCategories()
   const { mutate: refreshFeeds } = useRefreshFeeds()
+  const { mutate: createFeed } = useCreateFeeds()
   const { data: savedArticles } = useSavedArticle()
   const { mutate: saveArticle } = useSaveArticle()
   const { mutate: removeArticle } = useRemoveArticle()
@@ -46,6 +55,18 @@ function App() {
     page: 1,
     total: 0,
     totalPages: 0,
+  }
+
+  const createForm = useForm<CreateFeedInput>({
+    resolver: zodResolver(createFeedSchema),
+    defaultValues: { name: '', url: '', categoryId: undefined },
+  })
+
+  const handleCreate = (data: CreateFeedInput) => {
+    const parsed = createFeedSchema.parse(data)
+    createFeed(parsed)
+    setOpenModal(false)
+    createForm.reset()
   }
 
   const savedIds = useMemo(
@@ -75,7 +96,11 @@ function App() {
         <div className="flex justify-between items-center">
           <TitleSection title="home" subtitle="all feeds" />
           <div className="flex gap-1.5">
-            <CustomButton variant="ghost" size="md">
+            <CustomButton
+              onClick={() => setOpenModal(!openModal)}
+              variant="ghost"
+              size="md"
+            >
               <Plus width={16} height={16} />
               add feed
             </CustomButton>
@@ -206,6 +231,43 @@ function App() {
           totalPages={totalPages}
         />
       </div>
+
+      <Modal
+        title="new feed"
+        subtitle="// add new feed for you home"
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        onSubmit={createForm.handleSubmit(handleCreate)}
+      >
+        <div className="flex flex-col gap-3">
+          <CustomInput
+            label="name"
+            placeholder="feed name"
+            {...createForm.register('name')}
+            error={createForm.formState.errors.name}
+          />
+
+          <CustomInput
+            label="url"
+            placeholder="url"
+            {...createForm.register('url')}
+            error={createForm.formState.errors.url}
+          />
+
+          <CustomSelect
+            label="categories"
+            placeholder="select a category"
+            options={categories.data.map((c) => ({
+              value: c.id.toString(),
+              label: `${c.icon} ${c.name}`,
+            }))}
+            {...createForm.register('categoryId')}
+            error={
+              createForm.formState.errors.categoryId as FieldError | undefined
+            }
+          />
+        </div>
+      </Modal>
     </main>
   )
 }
