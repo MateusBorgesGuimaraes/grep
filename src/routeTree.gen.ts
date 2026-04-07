@@ -10,12 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SavedRouteImport } from './routes/saved'
+import { Route as ManageFeedsRouteImport } from './routes/manage-feeds'
 import { Route as CategoryRouteImport } from './routes/category'
 import { Route as IndexRouteImport } from './routes/index'
 
 const SavedRoute = SavedRouteImport.update({
   id: '/saved',
   path: '/saved',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ManageFeedsRoute = ManageFeedsRouteImport.update({
+  id: '/manage-feeds',
+  path: '/manage-feeds',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CategoryRoute = CategoryRouteImport.update({
@@ -32,30 +38,34 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/category': typeof CategoryRoute
+  '/manage-feeds': typeof ManageFeedsRoute
   '/saved': typeof SavedRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/category': typeof CategoryRoute
+  '/manage-feeds': typeof ManageFeedsRoute
   '/saved': typeof SavedRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/category': typeof CategoryRoute
+  '/manage-feeds': typeof ManageFeedsRoute
   '/saved': typeof SavedRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/category' | '/saved'
+  fullPaths: '/' | '/category' | '/manage-feeds' | '/saved'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/category' | '/saved'
-  id: '__root__' | '/' | '/category' | '/saved'
+  to: '/' | '/category' | '/manage-feeds' | '/saved'
+  id: '__root__' | '/' | '/category' | '/manage-feeds' | '/saved'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CategoryRoute: typeof CategoryRoute
+  ManageFeedsRoute: typeof ManageFeedsRoute
   SavedRoute: typeof SavedRoute
 }
 
@@ -66,6 +76,13 @@ declare module '@tanstack/react-router' {
       path: '/saved'
       fullPath: '/saved'
       preLoaderRoute: typeof SavedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/manage-feeds': {
+      id: '/manage-feeds'
+      path: '/manage-feeds'
+      fullPath: '/manage-feeds'
+      preLoaderRoute: typeof ManageFeedsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/category': {
@@ -88,6 +105,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CategoryRoute: CategoryRoute,
+  ManageFeedsRoute: ManageFeedsRoute,
   SavedRoute: SavedRoute,
 }
 export const routeTree = rootRouteImport

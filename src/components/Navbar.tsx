@@ -45,7 +45,7 @@ const NAV_MAIN = [
 ]
 
 const NAV_SETTINGS = [
-  { icon: <Settings />, label: 'manage feeds', to: '/feeds' },
+  { icon: <Settings />, label: 'manage feeds', to: '/manage-feeds' },
   { icon: <Settings />, label: 'settings', to: '/settings' },
 ]
 
