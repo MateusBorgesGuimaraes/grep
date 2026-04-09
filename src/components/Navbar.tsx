@@ -12,6 +12,7 @@ import {
 import ThemeToggle from './ThemeToggle'
 import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
+import { useCategories } from '#/hooks/useCategories'
 
 const NAV_MAIN = [
   {
@@ -49,15 +50,9 @@ const NAV_SETTINGS = [
   { icon: <Settings />, label: 'settings', to: '/settings' },
 ]
 
-const CATEGORIES = [
-  { label: 'tecnologia', count: 18 },
-  { label: 'notícias', count: 12 },
-  { label: 'ciência', count: 7 },
-  { label: 'design', count: 5 },
-]
-
 export const Navbar = () => {
   const [categoriesOpen, setCategoriesOpen] = useState(true)
+  const { data: categories } = useCategories()
 
   return (
     <div className="w-3xs shrink-0 flex flex-col bg-bg-surface border-r-[0.5px] border-border-soft h-screen">
@@ -145,20 +140,26 @@ export const Navbar = () => {
         <div
           className={`overflow-hidden transition-all duration-250 ${categoriesOpen ? 'max-h-48' : 'max-h-0'}`}
         >
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat.label}
-              className="w-full flex items-center gap-3 pl-10 pr-4 py-1.5 cursor-pointer hover:bg-bg-elevated transition-colors border-l-2 border-transparent"
-            >
-              <span className="w-1.5 h-1.5 rounded-full shrink-0 bg-text-muted" />
-              <span className="flex-1 text-[12px] text-text-secondary tracking-[0.03em]">
-                {cat.label}
-              </span>
-              <span className="text-xs text-text-muted tracking-[0.04em]">
-                {cat.count}
-              </span>
-            </button>
-          ))}
+          {categories &&
+            categories.data.map((cat) => (
+              <Link
+                to="/categories/$categoryId"
+                params={{ categoryId: String(cat.id) }}
+                key={cat.id}
+                className="w-full flex items-center gap-3 pl-10 pr-4 py-1.5 cursor-pointer hover:bg-bg-elevated transition-colors border-l-2 border-transparent"
+              >
+                <span
+                  style={{ background: cat.color }}
+                  className="w-1.5 h-1.5 rounded-full shrink-0 "
+                />
+                <span className="flex-1 text-[12px] text-text-secondary tracking-[0.03em]">
+                  {cat.name}
+                </span>
+                <span className="text-xs text-text-muted tracking-[0.04em]">
+                  {cat.feeds.length}
+                </span>
+              </Link>
+            ))}
         </div>
 
         {/* settings */}

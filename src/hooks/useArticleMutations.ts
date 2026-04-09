@@ -1,5 +1,6 @@
 import {
   fetchSavedArticles,
+  markAsRead,
   removeArticle,
   saveArticle,
 } from '#/services/article.service'
@@ -47,5 +48,25 @@ export function useSavedArticle() {
   return useQuery({
     queryKey: ['saved-articles'],
     queryFn: fetchSavedArticles,
+  })
+}
+
+export function useMarkAsReadArticle() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (articleId: number) => markAsRead(articleId),
+    onSuccess: () => {
+      toast.success('Mark as read successfully!')
+      queryClient.invalidateQueries({ queryKey: ['articles'] })
+      queryClient.invalidateQueries({ queryKey: ['saved-articles'] })
+    },
+    onError: (error) => {
+      if (axios.isAxiosError(error)) {
+        toast.error(
+          error.response?.data?.message ?? 'Error mark as read article',
+        )
+      }
+    },
   })
 }

@@ -9,6 +9,7 @@ import { Modal } from '#/components/Modal'
 import { Pagination } from '#/components/Pagination'
 import { TitleSection } from '#/components/TitleSection'
 import {
+  useMarkAsReadArticle,
   useRemoveArticle,
   useSaveArticle,
   useSavedArticle,
@@ -46,6 +47,7 @@ function App() {
   const { data, setFilter, categoryId, order, goToPage } = useArticles()
   const { data: categories } = useCategories()
   const { mutate: refreshFeeds } = useRefreshFeeds()
+  const { mutate: markAsRead } = useMarkAsReadArticle()
   const { mutate: createFeed } = useCreateFeeds()
   const { data: savedArticles } = useSavedArticle()
   const { mutate: saveArticle } = useSaveArticle()
@@ -219,6 +221,7 @@ function App() {
               createdAt={i.createdAt}
               title={i.title}
               saved={articleIsSave(i.id)}
+              readAction={markAsRead}
             />
           ))}
         </div>

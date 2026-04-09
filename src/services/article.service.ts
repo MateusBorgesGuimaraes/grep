@@ -41,3 +41,8 @@ export async function fetchSavedArticles(): Promise<
   const { data } = await api.get(`saved-articles`)
   return data
 }
+
+export async function markAsRead(id: number): Promise<ApiResponse<Item>> {
+  const { data } = await api.patch(`articles/${id}/read`)
+  return data
+}

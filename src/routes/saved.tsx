@@ -4,7 +4,11 @@ import { TwoButtons } from '#/components/form/TwoButtons'
 import { HeaderBox } from '#/components/HeaderBox'
 import { ListCard } from '#/components/ListCard'
 import { TitleSection } from '#/components/TitleSection'
-import { useRemoveArticle, useSavedArticle } from '#/hooks/useArticleMutations'
+import {
+  useMarkAsReadArticle,
+  useRemoveArticle,
+  useSavedArticle,
+} from '#/hooks/useArticleMutations'
 import { useCategories } from '#/hooks/useCategories'
 
 import { createFileRoute } from '@tanstack/react-router'
@@ -19,6 +23,7 @@ function RouteComponent() {
   const [listGrid, setListGrig] = useState(false)
   const [category, setCategory] = useState('')
   const { data: categories } = useCategories()
+  const { mutate: markAsRead } = useMarkAsReadArticle()
   const { data: savedArticles } = useSavedArticle()
   const { mutate: removeArticle } = useRemoveArticle()
 
@@ -128,6 +133,7 @@ function RouteComponent() {
               createdAt={sa.article.createdAt}
               title={sa.article.title}
               saved={true}
+              readAction={markAsRead}
             />
           ))}
         </div>

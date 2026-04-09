@@ -16,6 +16,7 @@ type BoxCardProps = {
   description: string
   saved: boolean
   saveAction: (id: number) => void
+  readAction: (id: number) => void
 }
 
 export const BoxCard = ({
@@ -28,6 +29,7 @@ export const BoxCard = ({
   createdAt,
   description,
   saved,
+  readAction,
   saveAction,
 }: BoxCardProps) => {
   return (
@@ -57,7 +59,16 @@ export const BoxCard = ({
             <MiniButton active={saved} onClick={() => saveAction(id)}>
               <Bookmark width={16} height={16} />
             </MiniButton>
-            <MiniButton as="link" href={link}>
+            <MiniButton
+              as="link"
+              active={read}
+              href={link}
+              onClick={(e) => {
+                e.preventDefault()
+                readAction(id)
+                window.open(link, '_blank')
+              }}
+            >
               <OpenNewWindow width={16} height={16} />
             </MiniButton>
           </div>

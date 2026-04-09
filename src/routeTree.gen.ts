@@ -13,6 +13,7 @@ import { Route as SavedRouteImport } from './routes/saved'
 import { Route as ManageFeedsRouteImport } from './routes/manage-feeds'
 import { Route as CategoryRouteImport } from './routes/category'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CategoriesCategoryIdRouteImport } from './routes/categories/$categoryId'
 
 const SavedRoute = SavedRouteImport.update({
   id: '/saved',
@@ -34,18 +35,25 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CategoriesCategoryIdRoute = CategoriesCategoryIdRouteImport.update({
+  id: '/categories/$categoryId',
+  path: '/categories/$categoryId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/category': typeof CategoryRoute
   '/manage-feeds': typeof ManageFeedsRoute
   '/saved': typeof SavedRoute
+  '/categories/$categoryId': typeof CategoriesCategoryIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/category': typeof CategoryRoute
   '/manage-feeds': typeof ManageFeedsRoute
   '/saved': typeof SavedRoute
+  '/categories/$categoryId': typeof CategoriesCategoryIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +61,25 @@ export interface FileRoutesById {
   '/category': typeof CategoryRoute
   '/manage-feeds': typeof ManageFeedsRoute
   '/saved': typeof SavedRoute
+  '/categories/$categoryId': typeof CategoriesCategoryIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/category' | '/manage-feeds' | '/saved'
+  fullPaths:
+    | '/'
+    | '/category'
+    | '/manage-feeds'
+    | '/saved'
+    | '/categories/$categoryId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/category' | '/manage-feeds' | '/saved'
-  id: '__root__' | '/' | '/category' | '/manage-feeds' | '/saved'
+  to: '/' | '/category' | '/manage-feeds' | '/saved' | '/categories/$categoryId'
+  id:
+    | '__root__'
+    | '/'
+    | '/category'
+    | '/manage-feeds'
+    | '/saved'
+    | '/categories/$categoryId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,6 +87,7 @@ export interface RootRouteChildren {
   CategoryRoute: typeof CategoryRoute
   ManageFeedsRoute: typeof ManageFeedsRoute
   SavedRoute: typeof SavedRoute
+  CategoriesCategoryIdRoute: typeof CategoriesCategoryIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -99,6 +120,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/categories/$categoryId': {
+      id: '/categories/$categoryId'
+      path: '/categories/$categoryId'
+      fullPath: '/categories/$categoryId'
+      preLoaderRoute: typeof CategoriesCategoryIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -107,6 +135,7 @@ const rootRouteChildren: RootRouteChildren = {
   CategoryRoute: CategoryRoute,
   ManageFeedsRoute: ManageFeedsRoute,
   SavedRoute: SavedRoute,
+  CategoriesCategoryIdRoute: CategoriesCategoryIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,17 +1,29 @@
-import { type ButtonHTMLAttributes } from 'react'
+import { type ButtonHTMLAttributes, type AnchorHTMLAttributes } from 'react'
 
-type MiniButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+type BaseProps = {
   active?: boolean
-  as?: 'button' | 'link'
-  href?: string
+  className?: string
+  children: React.ReactNode
 }
+
+type ButtonProps = BaseProps &
+  ButtonHTMLAttributes<HTMLButtonElement> & {
+    as?: 'button'
+  }
+
+type LinkProps = BaseProps &
+  AnchorHTMLAttributes<HTMLAnchorElement> & {
+    as: 'link'
+    href: string
+  }
+
+type MiniButtonProps = ButtonProps | LinkProps
 
 export const MiniButton = ({
   children,
   active,
   className = '',
   as = 'button',
-  href,
   ...props
 }: MiniButtonProps) => {
   const styleActive = active
@@ -21,12 +33,15 @@ export const MiniButton = ({
   const baseClass = `rounded-sm p-1 transition cursor-pointer ${styleActive} ${className}`
 
   if (as === 'link') {
+    const { href, ...rest } = props as LinkProps
+
     return (
       <a
         href={href}
         target="_blank"
         rel="noopener noreferrer"
         className={baseClass}
+        {...rest}
       >
         {children}
       </a>
@@ -34,7 +49,7 @@ export const MiniButton = ({
   }
 
   return (
-    <button className={baseClass} {...props}>
+    <button className={baseClass} {...(props as ButtonProps)}>
       {children}
     </button>
   )

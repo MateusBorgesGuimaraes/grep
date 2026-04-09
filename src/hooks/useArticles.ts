@@ -3,9 +3,9 @@ import { useQuery } from '@tanstack/react-query'
 import { useNavigate, useSearch } from '@tanstack/react-router'
 import { useState } from 'react'
 
-export function useArticles() {
+export function useArticles(categoryIdFromRoute?: string) {
   const navigate = useNavigate()
-  const searchParams = useSearch({ from: '/' })
+  const searchParams = useSearch({ strict: false })
   const [showFilter, setShowFilters] = useState(false)
 
   const page = Number(searchParams.page) || 1
@@ -13,19 +13,19 @@ export function useArticles() {
   const search = searchParams.search || ''
   const order = searchParams.order || 'DESC'
   const feedId = searchParams.feedId || ''
-  const categoryId = searchParams.categoryId || ''
+  const categoryId = (categoryIdFromRoute ?? searchParams.categoryId) || ''
   const unreadOnly = searchParams.unreadOnly === 'true'
 
   const setFilter = (filters: Record<string, string | undefined>) => {
     navigate({
-      to: '/',
+      to: '.',
       search: (prev) => ({ ...prev, ...filters, page: '1' }),
     })
   }
 
   const goToPage = (newPage: number) => {
     navigate({
-      to: '/',
+      to: '.',
       search: (prev) => ({ ...prev, page: String(newPage) }),
     })
   }
@@ -55,7 +55,6 @@ export function useArticles() {
 
   return {
     ...query,
-
     page,
     search,
     limit,
