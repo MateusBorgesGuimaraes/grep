@@ -9,12 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SearchRouteImport } from './routes/search'
 import { Route as SavedRouteImport } from './routes/saved'
 import { Route as ManageFeedsRouteImport } from './routes/manage-feeds'
 import { Route as CategoryRouteImport } from './routes/category'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CategoriesCategoryIdRouteImport } from './routes/categories/$categoryId'
 
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SavedRoute = SavedRouteImport.update({
   id: '/saved',
   path: '/saved',
@@ -46,6 +52,7 @@ export interface FileRoutesByFullPath {
   '/category': typeof CategoryRoute
   '/manage-feeds': typeof ManageFeedsRoute
   '/saved': typeof SavedRoute
+  '/search': typeof SearchRoute
   '/categories/$categoryId': typeof CategoriesCategoryIdRoute
 }
 export interface FileRoutesByTo {
@@ -53,6 +60,7 @@ export interface FileRoutesByTo {
   '/category': typeof CategoryRoute
   '/manage-feeds': typeof ManageFeedsRoute
   '/saved': typeof SavedRoute
+  '/search': typeof SearchRoute
   '/categories/$categoryId': typeof CategoriesCategoryIdRoute
 }
 export interface FileRoutesById {
@@ -61,6 +69,7 @@ export interface FileRoutesById {
   '/category': typeof CategoryRoute
   '/manage-feeds': typeof ManageFeedsRoute
   '/saved': typeof SavedRoute
+  '/search': typeof SearchRoute
   '/categories/$categoryId': typeof CategoriesCategoryIdRoute
 }
 export interface FileRouteTypes {
@@ -70,15 +79,23 @@ export interface FileRouteTypes {
     | '/category'
     | '/manage-feeds'
     | '/saved'
+    | '/search'
     | '/categories/$categoryId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/category' | '/manage-feeds' | '/saved' | '/categories/$categoryId'
+  to:
+    | '/'
+    | '/category'
+    | '/manage-feeds'
+    | '/saved'
+    | '/search'
+    | '/categories/$categoryId'
   id:
     | '__root__'
     | '/'
     | '/category'
     | '/manage-feeds'
     | '/saved'
+    | '/search'
     | '/categories/$categoryId'
   fileRoutesById: FileRoutesById
 }
@@ -87,11 +104,19 @@ export interface RootRouteChildren {
   CategoryRoute: typeof CategoryRoute
   ManageFeedsRoute: typeof ManageFeedsRoute
   SavedRoute: typeof SavedRoute
+  SearchRoute: typeof SearchRoute
   CategoriesCategoryIdRoute: typeof CategoriesCategoryIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/saved': {
       id: '/saved'
       path: '/saved'
@@ -135,6 +160,7 @@ const rootRouteChildren: RootRouteChildren = {
   CategoryRoute: CategoryRoute,
   ManageFeedsRoute: ManageFeedsRoute,
   SavedRoute: SavedRoute,
+  SearchRoute: SearchRoute,
   CategoriesCategoryIdRoute: CategoriesCategoryIdRoute,
 }
 export const routeTree = rootRouteImport
