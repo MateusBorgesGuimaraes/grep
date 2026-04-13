@@ -12,6 +12,7 @@ import {
   useSavedArticle,
 } from '#/hooks/useArticleMutations'
 import { useArticles } from '#/hooks/useArticles'
+import { useFeeds } from '#/hooks/useFeeds'
 import { createFileRoute } from '@tanstack/react-router'
 import { Menu, ViewGrid } from 'iconoir-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -22,12 +23,13 @@ export const Route = createFileRoute('/search')({
 
 function RouteComponent() {
   const [listGrid, setListGrig] = useState(false)
-  const { data, setFilter, order, goToPage, search, feedId } = useArticles()
+  const { data, setFilter, goToPage, search, feedId } = useArticles()
   const { mutate: markAsRead } = useMarkAsReadArticle()
   const { data: savedArticles } = useSavedArticle()
   const { mutate: saveArticle } = useSaveArticle()
+  const { data: feeds } = useFeeds()
   const { mutate: removeArticle } = useRemoveArticle()
-  const { items, page, total, totalPages } = data?.data ?? {
+  const { page, total, totalPages } = data?.data ?? {
     items: [],
     page: 1,
     total: 0,
@@ -60,8 +62,6 @@ function RouteComponent() {
     if (e.key === 'Escape') handleClear()
   }
 
-  // const feeds = data?.feeds ?? []
-  //
   const savedIds = useMemo(
     () => new Set(savedArticles?.data?.map((a) => a.article.id) ?? []),
     [savedArticles],
@@ -104,18 +104,25 @@ function RouteComponent() {
               //
             </p>
             <div className="flex gap-1.5">
-              <CustomButton variant="primary" size="md">
+              <CustomButton
+                onClick={() => setFilter({ feedId: '' })}
+                variant={feedId === '' ? 'primary' : 'secondary'}
+                size="md"
+              >
                 all
               </CustomButton>
-              <CustomButton variant="secondary" size="md">
-                FEED1
-              </CustomButton>
-              <CustomButton variant="secondary" size="md">
-                FEED2
-              </CustomButton>
-              <CustomButton variant="secondary" size="md">
-                FEED3
-              </CustomButton>
+              {feeds?.data.map((feed) => (
+                <CustomButton
+                  key={feed.id}
+                  onClick={() => setFilter({ feedId: feed.id.toString() })}
+                  variant={
+                    feedId === feed.id.toString() ? 'primary' : 'secondary'
+                  }
+                  size="md"
+                >
+                  {feed.name}
+                </CustomButton>
+              ))}
             </div>
           </div>
           <div>
@@ -143,7 +150,6 @@ function RouteComponent() {
         ) : (
           <p className="text-xs text-text-secondary">START YOUR SEARCH</p>
         )}
-        {/*<p className="text-xs text-text-secondary">START YOUR SEARCH</p>*/}
       </HeaderBox>
       <div className="p-5">
         {!search ? (
