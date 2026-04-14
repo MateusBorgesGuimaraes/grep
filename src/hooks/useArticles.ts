@@ -6,7 +6,7 @@ import { useState } from 'react'
 export function useArticles(categoryIdFromRoute?: string) {
   const navigate = useNavigate()
   const searchParams = useSearch({ strict: false })
-  const [showFilter, setShowFilters] = useState(false)
+  const [_, setShowFilters] = useState(false)
 
   const page = Number(searchParams.page) || 1
   const limit = Number(searchParams.limit) || 6
