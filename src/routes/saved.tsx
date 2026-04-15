@@ -1,16 +1,11 @@
-import { BoxCard } from '#/components/BoxCard'
+import { CardsContainer } from '#/components/CardsContainer'
 import { CustomButton } from '#/components/form/CustomButton'
 import { TwoButtons } from '#/components/form/TwoButtons'
 import { HeaderBox } from '#/components/HeaderBox'
-import { ListCard } from '#/components/ListCard'
 import { TitleSection } from '#/components/TitleSection'
-import {
-  useMarkAsReadArticle,
-  useRemoveArticle,
-  useSavedArticle,
-} from '#/hooks/useArticleMutations'
+import { useSavedArticle } from '#/hooks/useArticleMutations'
 import { useCategories } from '#/hooks/useCategories'
-
+import type { Item } from '#/services/types'
 import { createFileRoute } from '@tanstack/react-router'
 import { Menu, ViewGrid } from 'iconoir-react'
 import { useState } from 'react'
@@ -23,9 +18,7 @@ function RouteComponent() {
   const [listGrid, setListGrig] = useState(false)
   const [category, setCategory] = useState('')
   const { data: categories } = useCategories()
-  const { mutate: markAsRead } = useMarkAsReadArticle()
   const { data: savedArticles } = useSavedArticle()
-  const { mutate: removeArticle } = useRemoveArticle()
 
   if (!categories) {
     return <div>Loading...</div>
@@ -39,23 +32,7 @@ function RouteComponent() {
     )
   }
 
-  const remove = (id: number) => {
-    removeArticle(id)
-  }
-
-  const filterByType = (category: string) => {
-    if (!savedArticles?.data) return []
-
-    if (category === '') {
-      return savedArticles.data
-    }
-
-    return savedArticles.data.filter(
-      (a) => a.article.feed.category.name === category,
-    )
-  }
-
-  const activeItems = filterByType(category)
+  const items: Item[] = savedArticles.data.map((sa) => sa.article)
 
   return (
     <div>
@@ -100,44 +77,7 @@ function RouteComponent() {
           />
         </div>
       </HeaderBox>
-      {listGrid ? (
-        <div className="flex flex-col p-5 gap-5">
-          {activeItems.map((sa) => (
-            <ListCard
-              key={sa.article.guid}
-              link={sa.article.link}
-              id={sa.article.id}
-              saveAction={remove}
-              read={sa.article.read}
-              font={sa.article.feed.name}
-              category={sa.article.feed.category.name}
-              description={sa.article.description}
-              createdAt={sa.article.createdAt}
-              title={sa.article.title}
-              saved={true}
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(min(500px,100%),1fr))] gap-5 p-5">
-          {activeItems.map((sa) => (
-            <BoxCard
-              id={sa.article.id}
-              link={sa.article.link}
-              saveAction={remove}
-              key={sa.article.guid}
-              read={sa.article.read}
-              font={sa.article.feed.name}
-              category={sa.article.feed.category.name}
-              description={sa.article.description}
-              createdAt={sa.article.createdAt}
-              title={sa.article.title}
-              saved={true}
-              readAction={markAsRead}
-            />
-          ))}
-        </div>
-      )}
+      <CardsContainer items={items} listGrid={listGrid} />
     </div>
   )
 }

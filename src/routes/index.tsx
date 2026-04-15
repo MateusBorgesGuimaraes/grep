@@ -1,19 +1,12 @@
-import { BoxCard } from '#/components/BoxCard'
+import { CardsContainer } from '#/components/CardsContainer'
 import { CustomButton } from '#/components/form/CustomButton'
 import { CustomInput } from '#/components/form/CustomInput'
 import { CustomSelect } from '#/components/form/CustomSelect'
 import { TwoButtons } from '#/components/form/TwoButtons'
 import { HeaderBox } from '#/components/HeaderBox'
-import { ListCard } from '#/components/ListCard'
 import { Modal } from '#/components/Modal'
 import { Pagination } from '#/components/Pagination'
 import { TitleSection } from '#/components/TitleSection'
-import {
-  useMarkAsReadArticle,
-  useRemoveArticle,
-  useSaveArticle,
-  useSavedArticle,
-} from '#/hooks/useArticleMutations'
 import { useArticles } from '#/hooks/useArticles'
 import { useCategories } from '#/hooks/useCategories'
 import { useCreateFeeds } from '#/hooks/useFeedsMutations'
@@ -22,7 +15,7 @@ import { createFeedSchema, type CreateFeedInput } from '#/schemas/feed.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { createFileRoute } from '@tanstack/react-router'
 import { Check, Menu, Plus, Refresh, Sort, ViewGrid } from 'iconoir-react'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useForm, type FieldError } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -47,11 +40,7 @@ function App() {
   const { data, setFilter, categoryId, order, goToPage } = useArticles()
   const { data: categories } = useCategories()
   const { mutate: refreshFeeds } = useRefreshFeeds()
-  const { mutate: markAsRead } = useMarkAsReadArticle()
   const { mutate: createFeed } = useCreateFeeds()
-  const { data: savedArticles } = useSavedArticle()
-  const { mutate: saveArticle } = useSaveArticle()
-  const { mutate: removeArticle } = useRemoveArticle()
   const { items, page, total, totalPages } = data?.data ?? {
     items: [],
     page: 1,
@@ -71,25 +60,8 @@ function App() {
     createForm.reset()
   }
 
-  const savedIds = useMemo(
-    () => new Set(savedArticles?.data?.map((a) => a.article.id) ?? []),
-    [savedArticles],
-  )
-
   if (!categories) {
     return <div>Loading...</div>
-  }
-
-  const articleIsSave = (id: number) => {
-    return savedIds.has(id)
-  }
-
-  const toggleSave = (id: number) => {
-    if (articleIsSave(id)) {
-      removeArticle(id)
-    } else {
-      saveArticle(id)
-    }
   }
 
   return (
@@ -188,44 +160,7 @@ function App() {
           </div>
         </div>
       </HeaderBox>
-      {listGrid ? (
-        <div className="flex flex-col p-5 gap-5">
-          {items.map((i) => (
-            <ListCard
-              key={i.guid}
-              link={i.link}
-              id={i.id}
-              saveAction={toggleSave}
-              read={i.read}
-              font={i.feed.name}
-              category={i.feed.category.name}
-              description={i.description}
-              createdAt={i.createdAt}
-              title={i.title}
-              saved={articleIsSave(i.id)}
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(min(500px,100%),1fr))] gap-5 p-5">
-          {items.map((i) => (
-            <BoxCard
-              id={i.id}
-              link={i.link}
-              saveAction={toggleSave}
-              key={i.guid}
-              read={i.read}
-              font={i.feed.name}
-              category={i.feed.category.name}
-              description={i.description}
-              createdAt={i.createdAt}
-              title={i.title}
-              saved={articleIsSave(i.id)}
-              readAction={markAsRead}
-            />
-          ))}
-        </div>
-      )}
+      <CardsContainer items={items} listGrid={listGrid} />
       <div className="ml-5 pb-5">
         <Pagination
           onPageChange={goToPage}
