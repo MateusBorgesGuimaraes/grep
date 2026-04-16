@@ -13,37 +13,7 @@ import ThemeToggle from './ThemeToggle'
 import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { useCategories } from '#/hooks/useCategories'
-
-const NAV_MAIN = [
-  {
-    icon: <HomeSimpleDoor />,
-    label: 'home',
-    to: '/',
-    badge: 42,
-    badgeMuted: false,
-  },
-  {
-    icon: <BookmarkBook />,
-    label: 'saved',
-    to: '/saved',
-    badge: 7,
-    badgeMuted: true,
-  },
-  {
-    icon: <Folder />,
-    label: 'category',
-    to: '/category',
-    badge: 4,
-    badgeMuted: true,
-  },
-  {
-    icon: <Search />,
-    label: 'search',
-    to: '/search',
-    badge: null,
-    badgeMuted: false,
-  },
-]
+import { useNavbarBadges } from '#/hooks/useNavbarBadges'
 
 const NAV_SETTINGS = [
   { icon: <Settings />, label: 'manage feeds', to: '/manage-feeds' },
@@ -52,7 +22,39 @@ const NAV_SETTINGS = [
 
 export const Navbar = () => {
   const [categoriesOpen, setCategoriesOpen] = useState(true)
+  const { savedArticlesBadge, homeBadge, categoriesBadge } = useNavbarBadges()
+
   const { data: categories } = useCategories()
+  const NAV_MAIN = [
+    {
+      icon: <HomeSimpleDoor />,
+      label: 'home',
+      to: '/',
+      badge: homeBadge,
+      badgeMuted: false,
+    },
+    {
+      icon: <BookmarkBook />,
+      label: 'saved',
+      to: '/saved',
+      badge: savedArticlesBadge,
+      badgeMuted: true,
+    },
+    {
+      icon: <Folder />,
+      label: 'category',
+      to: '/category',
+      badge: categoriesBadge,
+      badgeMuted: true,
+    },
+    {
+      icon: <Search />,
+      label: 'search',
+      to: '/search',
+      badge: null,
+      badgeMuted: false,
+    },
+  ]
 
   return (
     <div className="w-3xs shrink-0 flex flex-col bg-bg-surface border-r-[0.5px] border-border-soft h-screen">
