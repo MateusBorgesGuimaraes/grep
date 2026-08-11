@@ -1,204 +1,214 @@
-Welcome to your new TanStack Start app! 
+# grep
 
-# Getting Started
+> A minimalist RSS reader for discovering, organizing, and keeping track of articles from your favorite feeds.
 
-To run this application:
+`grep` is a frontend application designed to provide a simple and organized experience for consuming RSS content. It brings articles, feeds, categories, search, filtering, saved articles, and feed management together in a clean, terminal-inspired interface.
 
-```bash
-npm install
-npm run dev
+## ✨ Features
+
+* **Article feed** — browse articles from available RSS feeds.
+* **Feed management** — add and manage RSS feeds.
+* **Categories** — organize feeds into custom categories.
+* **Search** — search through available articles.
+* **Unread articles** — filter and keep track of unread content.
+* **Saved articles** — save articles to read later.
+* **Read status** — mark articles as read.
+* **Filtering** — filter by category, feed, and unread status.
+* **Sorting** — sort articles in ascending or descending order.
+* **Pagination** — navigate through large collections of articles.
+* **List/Grid views** — switch between different article layouts.
+* **Theme support** — light, dark, and automatic themes.
+* **Reusable components** — shared UI components for forms, cards, navigation, modals, pagination, and more.
+* **Form validation** — validated forms using React Hook Form and Zod.
+* **Toast notifications** — user feedback with Sonner.
+
+## 🛠️ Tech Stack
+
+### Core
+
+* [React 19](https://react.dev/)
+* [TypeScript](https://www.typescriptlang.org/)
+* [Vite](https://vite.dev/)
+* [TanStack Start](https://tanstack.com/start)
+
+### Routing & Data
+
+* [TanStack Router](https://tanstack.com/router)
+* [TanStack Query](https://tanstack.com/query)
+* [Axios](https://axios-http.com/)
+
+### Forms & Validation
+
+* [React Hook Form](https://react-hook-form.com/)
+* [Zod](https://zod.dev/)
+
+### UI & Styling
+
+* [Tailwind CSS](https://tailwindcss.com/)
+* [Lucide React](https://lucide.dev/)
+* [Iconoir](https://iconoir.com/)
+* [Sonner](https://sonner.emilkowal.ski/)
+* [Courier Prime](https://fonts.google.com/specimen/Courier+Prime)
+
+## 🧩 Frontend Architecture
+
+The project is structured around reusable components, route-level pages, custom hooks, API services, validation schemas, and TanStack integrations.
+
+```text
+src/
+├── components/             # Reusable UI components
+│   ├── form/               # Form controls and inputs
+│   └── pages/              # Page-specific components
+├── hooks/                  # Queries, mutations, and application logic
+├── integrations/           # TanStack Query integration
+├── routes/                 # File-based TanStack Router routes
+├── schemas/                # Zod validation schemas
+├── services/               # API communication
+├── styles.css              # Global styles and theme variables
+├── router.tsx              # Router configuration
+└── routeTree.gen.ts        # Generated route tree
 ```
 
-# Building For Production
+TanStack Router handles file-based routing, while TanStack Query manages server state, caching, and synchronization with the API.
 
-To build this application for production:
+Application filters are also synchronized with URL search parameters, keeping pagination, categories, feeds, search, sorting, and unread status connected to the current route.
 
-```bash
-npm run build
-```
+## 🎨 Design
 
-## Testing
+The interface follows a minimal, developer-oriented visual language inspired by terminal applications and desktop environments.
 
-This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
+### Visual characteristics
 
-```bash
-npm run test
-```
+* Monochromatic neutral palette
+* `Courier Prime` typography
+* Subtle borders and elevated surfaces
+* macOS-inspired window controls
+* Light and dark themes
+* Automatic system theme detection
+* Compact, information-dense layouts
+* Minimal animations and transitions
 
-## Styling
+The theme is initialized before the application renders to reduce visual changes during startup.
 
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
+## 🧭 Application
 
-### Removing Tailwind CSS
+### Home
 
-If you prefer not to use Tailwind CSS:
+The main article feed, providing filtering, sorting, pagination, and different viewing modes.
 
-1. Remove the demo pages in `src/routes/demo/`
-2. Replace the Tailwind import in `src/styles.css` with your own styles
-3. Remove `tailwindcss()` from the plugins array in `vite.config.ts`
-4. Uninstall the packages: `npm install @tailwindcss/vite tailwindcss -D`
+### Saved
 
-## Linting & Formatting
+A dedicated view for articles saved for later reading.
 
+### Categories
 
-This project uses [eslint](https://eslint.org/) and [prettier](https://prettier.io/) for linting and formatting. Eslint is configured using [tanstack/eslint-config](https://tanstack.com/config/latest/docs/eslint). The following scripts are available:
+Organize and navigate content through custom categories.
 
-```bash
-npm run lint
-npm run format
-npm run check
-```
+### Search
 
+Search for articles across the available content.
 
+### Manage Feeds
 
-## Routing
+Interface for adding and managing RSS feeds.
 
-This project uses [TanStack Router](https://tanstack.com/router) with file-based routing. Routes are managed as files in `src/routes`.
+### Settings
 
-### Adding A Route
+Application preferences and configuration.
 
-To add a new route to your application just add a new file in the `./src/routes` directory.
+## 🔎 Article Filtering
 
-TanStack will automatically generate the content of the route file for you.
+Articles can be filtered using URL search parameters:
 
-Now that you have two routes you can use a `Link` component to navigate between them.
-
-### Adding Links
-
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
-
-```tsx
-import { Link } from "@tanstack/react-router";
-```
-
-Then anywhere in your JSX you can use it like so:
-
-```tsx
-<Link to="/about">About</Link>
-```
-
-This will create a link that will navigate to the `/about` route.
-
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
-
-### Using A Layout
-
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you render `{children}` in the `shellComponent`.
-
-Here is an example layout that includes a header:
-
-```tsx
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
-
-export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      { charSet: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { title: 'My App' },
-    ],
-  }),
-  shellComponent: ({ children }) => (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        <header>
-          <nav>
-            <Link to="/">Home</Link>
-            <Link to="/about">About</Link>
-          </nav>
-        </header>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  ),
-})
-```
-
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
-
-## Server Functions
-
-TanStack Start provides server functions that allow you to write server-side code that seamlessly integrates with your client components.
-
-```tsx
-import { createServerFn } from '@tanstack/react-start'
-
-const getServerTime = createServerFn({
-  method: 'GET',
-}).handler(async () => {
-  return new Date().toISOString()
-})
-
-// Use in a component
-function MyComponent() {
-  const [time, setTime] = useState('')
-  
-  useEffect(() => {
-    getServerTime().then(setTime)
-  }, [])
-  
-  return <div>Server time: {time}</div>
-}
-```
-
-## API Routes
-
-You can create API routes by using the `server` property in your route definitions:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-import { json } from '@tanstack/react-start'
-
-export const Route = createFileRoute('/api/hello')({
-  server: {
-    handlers: {
-      GET: () => json({ message: 'Hello, World!' }),
-    },
-  },
-})
-```
-
-## Data Fetching
-
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
+* Search query
+* Feed
+* Category
+* Unread status
+* Sort order
+* Page
+* Page size
 
 For example:
 
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-
-export const Route = createFileRoute('/people')({
-  loader: async () => {
-    const response = await fetch('https://swapi.dev/api/people')
-    return response.json()
-  },
-  component: PeopleComponent,
-})
-
-function PeopleComponent() {
-  const data = Route.useLoaderData()
-  return (
-    <ul>
-      {data.results.map((person) => (
-        <li key={person.name}>{person.name}</li>
-      ))}
-    </ul>
-  )
-}
+```text
+/?page=1&limit=6&categoryId=2&unreadOnly=true&order=DESC
 ```
 
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
+Keeping these filters in the URL makes the current view persistent across navigation and allows filtered views to be shared directly.
 
-# Demo files
+## 🧱 Reusable Components
 
-Files prefixed with `demo` can be safely deleted. They are there to provide a starting point for you to play around with the features you've installed.
+The application uses a collection of reusable components to keep the interface consistent and reduce duplication.
 
-# Learn More
+Some of the main component groups include:
 
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
+* Buttons
+* Inputs
+* Search inputs
+* Selects
+* Article cards
+* Feed cards
+* Category cards
+* Modals
+* Pagination
+* Tags
+* Toggles
+* Theme controls
+* Navigation components
 
-For TanStack Start specific documentation, visit [TanStack Start](https://tanstack.com/start).
+The form components are designed to be reusable across different parts of the application, while the higher-level components focus on composing the interface and application behavior.
+
+## 📁 Project Structure
+
+```text
+grep/
+├── src/
+│   ├── components/
+│   │   ├── form/
+│   │   └── pages/
+│   ├── hooks/
+│   ├── integrations/
+│   │   └── tanstack-query/
+│   ├── routes/
+│   ├── schemas/
+│   ├── services/
+│   ├── styles.css
+│   ├── router.tsx
+│   └── routeTree.gen.ts
+├── public/
+├── package.json
+├── vite.config.ts
+├── tsconfig.json
+└── README.md
+```
+
+## 📌 Project Status
+
+`grep` is a personal frontend project currently at version **0.1.0**.
+
+The project focuses on practicing and applying modern frontend development concepts such as:
+
+* React application architecture
+* TypeScript
+* File-based routing
+* Server-state management
+* URL-based application state
+* Form handling and validation
+* Reusable component design
+* Responsive interface development
+* Theme management
+* API integration
+
+## 📄 License
+
+No license is currently specified in the repository.
+
+## 👨‍💻 Author
+
+**Mateus Borges Guimarães**
+
+[GitHub](https://github.com/MateusBorgesGuimaraes)
+
+---
+
+Built with React, TypeScript, TanStack, and a healthy obsession with organized feeds.
